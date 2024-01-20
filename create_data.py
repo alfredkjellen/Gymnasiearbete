@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 from load_competitions import all_competitions
 import chart_studio.plotly as py
 
-chart_studio.tools.set_credentials_file(username='alkj', api_key='gAdFmcSWwiJfj1k36AzS')
+chart_studio.tools.set_credentials_file(username='alkj', api_key='')
 
 
 # Metoder för att jämföra två listor
