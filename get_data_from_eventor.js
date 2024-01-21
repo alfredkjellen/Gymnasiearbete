@@ -3,12 +3,10 @@ function fetchTableContent(url) {
 // Hämtar innehållet från URL:en som text
 var response = UrlFetchApp.fetch(url).getContentText();
 
-// Extrahera alla <h2>-taggar för att hitta ett namn för kalkylbladet
 var h2Matches = response.match(/<h2>\s*([\s\S]+?)\s*<\/h2>/g);
-var sheetName = 'Ny Flik'; // Standardnamn om ingen <h2> hittas
+var sheetName = 'Ny Flik';
 if (h2Matches && h2Matches[1]) {
-// Dekodar HTML-entiteter och tar bort HTML-taggar från den första <h2>-taggen och trimmar
-resultatet
+
 sheetName = decodeHtmlEntities(stripTags(h2Matches[1])).trim();
 }
 
@@ -21,9 +19,9 @@ for (var i = 0; i < matches.length; i++) {
 var row = matches[i];
 // Extraherar alla dataceller från raden
 var tdMatches = row.match(/<td[^>]*>[\s\S]+?<\/td>/g);
-// Kontrollerar att det finns minst 5 kolumner
+
 if (tdMatches && tdMatches.length >= 5) {
-// Behandlar den tredje och fjärde kolumnen
+
 var thirdColumnData = decodeHtmlEntities(stripTags(tdMatches[2])).trim();
 var fourthColumnData = decodeHtmlEntities(stripTags(tdMatches[3])).trim();
 
@@ -39,7 +37,6 @@ var rowData = [];
 
 var firstColumnData = decodeHtmlEntities(stripTags(tdMatches[0])); // Första <td>
 
-// Trimma första kolumnens data om det överstiger 10 tecken
 if (firstColumnData.length > 10) {
 firstColumnData = firstColumnData.slice(-10);
 }
@@ -48,7 +45,7 @@ firstColumnData = firstColumnData.slice(-10);
 rowData.push(firstColumnData);
 rowData.push(thirdColumnData);
 rowData.push(fourthColumnData);
-rowData.push(decodeHtmlEntities(stripTags(tdMatches[4]))); // Femte <td>
+rowData.push(decodeHtmlEntities(stripTags(tdMatches[4])));
 data.push(rowData);
 }
 }
@@ -86,7 +83,7 @@ return String.fromCharCode(dec);
 function logRunnerLinks() {
 var mainUrl = "https://eventor.orientering.se/Ranking/ol/List/Index/311?pageIndex=5";
 var mainResponse = UrlFetchApp.fetch(mainUrl).getContentText();
-// Extraherar tabellinnehåll från <div id="main">
+
 var linkMatches = mainResponse.match(/<div id="main">[\s\S]*?<table[^>]*>[\s\S]*?<\/table>/);
 if (!linkMatches) return;
 var runnerLinks = [];
@@ -106,21 +103,21 @@ Logger.log(runnerLinks.join(', '));
 function fetchMultipleTables() {
 var mainUrl = "https://eventor.orientering.se/Ranking/ol/List/Index/311?pageIndex=5";
 var mainResponse = UrlFetchApp.fetch(mainUrl).getContentText();
-// Extraherar tabellinnehåll från <div id="main">
+
 var linkMatches = mainResponse.match(/<div id="main">[\s\S]*?<table[^>]*>[\s\S]*?<\/table>/);
 
 if (!linkMatches) return;
 var links = [];
 var linkRegex = /<td[^>]*>\s*<a href="([^"]+)">/g;
 var match;
-// Hittar och samlar alla länkar
+
 while (match = linkRegex.exec(linkMatches[0])) {
 links.push('https://eventor.orientering.se' + match[1]);
 }
 
 // Loopar genom alla länkar och anropar fetchTableContent() för varje länk
 while (links.length > 0) {
-var link = links.shift(); // Tar bort den första länken från listan och bearbetar den
+var link = links.shift();
 fetchTableContent(link);
 }
 }
