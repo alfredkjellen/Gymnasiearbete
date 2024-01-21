@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 from load_competitions import all_competitions
 import chart_studio.plotly as py
 
-chart_studio.tools.set_credentials_file(username='alkj', api_key='')
+chart_studio.tools.set_credentials_file(username='alkj', api_key='gAdFmcSWwiJfj1k36AzS')
 
 
 # Metoder för att jämföra två listor
@@ -59,7 +59,7 @@ def run_all_combinations(comp, comp_result, ranking_file, comp_category):
             rbo_value = rbo(predicted_ranking, comp_result)
 
             # Jämför de två listorna med procentuell positionsdifferens
-            percentage_position_difference = percentage_shifts(predicted_ranking, comp_result)
+            percentage_position_difference = percentage_position_difference(predicted_ranking, comp_result)
 
 
             # Nästa rad i DataFrame
@@ -143,7 +143,7 @@ def calculate_average_position_difference(listA, listB):
 
 
 # Beräknar den procentuella positionsidfferensen
-def percentage_shifts(listA, listB):
+def percentage_position_difference(listA, listB):
     
     total_shifts = calculate_shifts(listA, listB)
     n = len(listA)
@@ -248,34 +248,37 @@ run_GA()
 
 
 # region F (Slumpmässiga tester)
-def run_random_tests(elements):
+def run_random_tests(elements, simulations = 1000000):
 
     listA = []
 
     for i in range(elements):
         listA.append(i)
 
-
-    print(len(listA))
-
     random_RBO_value = 0
-    random_AS_value = 0
-    simulations = 10000
+    random_APD_value = 0
+    random_PPD_value = 0
 
     for i in range(simulations):
         
         listB = list(listA)
         random.shuffle(listB)
     
-        random_AS_value += calculate_average_position_difference(listA, listB)
-        random_RBO_value += rbo(listA, listB)
+        #random_AS_value += calculate_average_position_difference(listA, listB)
+        #random_RBO_value += rbo(listA, listB)
+        random_PPD_value += percentage_position_difference(listA, listB)
         
-    random_AS_value /= simulations
+    random_APD_value /= simulations
     random_RBO_value /= simulations
+    random_PPD_value /= simulations
 
-    print("Random AS:", random_AS_value)
+    print("Random APD:", random_APD_value)
     print("Random RBO:", random_RBO_value)
+    print("random PPD:",  random_PPD_value)
 
 
 # endregion
+
+
+
 
